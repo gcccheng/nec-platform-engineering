@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: validator-servicemonitor
+  labels:
+    release: monitoring  # Must match Prometheus release label
+spec:
+  selector:
+    matchLabels:
+      app: validator  # Must match service label
+  namespaceSelector:
+    matchNames:
+      - validator      # Target your custom namespace
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 10s
+
