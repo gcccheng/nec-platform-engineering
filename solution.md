@@ -1,8 +1,8 @@
 # overview
-This solution addresses the task of containerizing a Python script (validate_peptide.py), exposing it via a REST API, ensuring observability, enabling scalability and automating with github. This documentation also list the future work of packaging this microservice as Helm chart for easy deployment cross platforms. The overall approach emphasizes automation, monitorability, and production-readiness — principles that are applied as platform engineer.
+This solution addresses the task of containerizing a Python script (validate_peptide.py), exposing it via a REST API, ensuring observability, enabling scalability and automating with github. This documentation also list the future work that help to intergrate into machine learning or AI operation pipelines. The overall approach emphasizes automation, monitorability, and production-readiness — principles that are applied as platform engineer.
 
-## Containerization script
-I Packaged the original script as a lightweight, reusable Docker image, so it can:
+## 1. Containerization script
+I packaged the original script as a lightweight, reusable Docker image, so it can:
 
 - Run container from CLI
 
@@ -17,9 +17,9 @@ Key component:
 - Set ENTRYPOINT for CLI-style usage (docker run validator "XYZ")
 
 
-## Creating REST API
+## 2. Creating REST API
 
-I Wrapped the validation logic in a RESTful API using FastAPI, exposing a single-purpose scientific service.
+I wrapped the validation logic in a RESTful API using FastAPI, exposing a single-purpose scientific service.
 
 Key components: 
 
@@ -30,23 +30,23 @@ Key components:
 - /metrics endpoint exposes Prometheus-compatible metrics
 
 
-## Observability with Logging & Metrics
+## 3. Observability with Logging & Metrics
 
 When talking about observability in this context, there can be two scenarios. 
 
-### 1. Application-Level Observability
+### 3.1 Application-Level Observability
 
 Embedded logging and metrics inside the Python code: 
 
-- Logging:	Implemented using Python’s logging module
+- Logging: Implemented using Python’s logging module
 
-- Metrics:	Implemented using prometheus-fastapi-instrumentator to expose HTTP request metrics (latency, count, status codes) via /metrics
+- Metrics: Implemented using prometheus-fastapi-instrumentator to expose HTTP request metrics (latency, count, status codes) via /metrics
 
-- Scope:	Internal to the app: tracks what the app is doing
+- Scope: Tracks what the app is doing
 
-- Purpose:	Debugging, request tracing, usage stats, error tracking
+- Purpose: Debugging, request tracing, usage stats, error tracking
 
-- Consumer:	Humans (developers), Prometheus, stdout via docker logs
+- Consumer:	Application sers 
 
 Example Use Case:
 
@@ -56,7 +56,7 @@ Example Use Case:
 
 
 
-### 2. Infrastructure-Level Observability
+### 3.2 Infrastructure-Level Observability
 
 External tools (like Prometheus on Kubernetes) observe the runtime behavior of the pod.
 
@@ -64,15 +64,13 @@ External tools (like Prometheus on Kubernetes) observe the runtime behavior of t
 
 - ServiceMonitor:	Kubernetes-native way to tell Prometheus to watch a service
 
-- Scope	Outside-in: monitors  service’s exposed metrics
-
 - Purpose:	Aggregated monitoring, dashboards (Grafana), alerting
 
-- Consumer:	Platform team, SREs, dashboards
+- Consumer:	Platform team, SRE
 
 Example Use Case:
 
-- Monitor HTTP traffic volume to your app across all replicas
+- Monitor HTTP traffic volume to  app across all replicas
 
 - Alert if request errors increase or latency spikes
 
@@ -102,7 +100,7 @@ Key components:
 
 - Verified Prometheus scraping of validator service
 
-## 6 . Helm Chart for Validator Service
+## 6. Helm Chart for Validator Service
 
 Packaged the microservice as a reusable Helm chart to:
 
@@ -156,7 +154,7 @@ D --> F[Push Helm chart to Git or registry]
 E --> G[Argo CD auto-syncs deployment]
 ```
 
-## Future work
+## 8. Future work
 
 1. Microservice Lifecycle & Management
 
